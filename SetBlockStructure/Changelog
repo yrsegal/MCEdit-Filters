@@ -1,0 +1,6 @@
+########## VERSION 1.3.0 ###########
+# Now including Tile Data!
+# Uses new string IDs
+# Fixed a bug: [MAJOR] Cacti breaking because of random block updates
+
+[...]

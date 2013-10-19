@@ -4,10 +4,8 @@
 
 ########## SetBlock Structure by jgierer12 ###########
 # based on Sethbling"s StructureSpawner Filter
-# http://youtube.com/jgierer12
-# /r/jgierer12
 
-########## VERSION 0.2 ###########
+########## VERSION 1.0 ###########
 # Now including Tile Data!
 # Using new string IDs
 

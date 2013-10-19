@@ -1,7 +1,5 @@
 ########## Create Ghost Blocks by jgierer12 ###########
 # for destruc7i0n
-# http://youtube.com/jgierer12
-# /r/jgierer12
 
 ########## VERSION 1.2 ###########
 # Added Clock
