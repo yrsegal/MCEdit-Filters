@@ -2,7 +2,8 @@
 # for magib1
 # Flips relative coordinates in command blocks ("-" -> "+", "+" -> "-")
 
-########## VERSION 1.0 ###########
+########## VERSION 1.1 ###########
+# Fixed a bug: [MAJOR] With some commands the filter will flip the y coordinate instead of the x
 
 
 from pymclevel import TAG_List
@@ -20,12 +21,12 @@ import math
 
 
 commands = [
-	("setblock", 2),
-	("testforblock", 2),
+	("setblock", 1),
+	("testforblock", 1),
 	("tp", 2),
 	("playsound", 4),
-	("spawnpoint", 3),
-	("summon", 3),
+	("spawnpoint", 2),
+	("summon", 2),
 ]
 
 displayName = "Flip Coordinates"
@@ -72,18 +73,14 @@ def flipCoordinates(level, box, options, changes):
 			for (command, XCoordIndex) in commands:
 				if word == command or word == "/"+command:
 					XCoord = oldCommandArray[wordIndex+XCoordIndex]
-					YCoord = oldCommandArray[wordIndex+XCoordIndex+1]
 					ZCoord = oldCommandArray[wordIndex+XCoordIndex+2]
 
 					if XCoord[0] == "~":
 						XCoord = "~"+str(int(XCoord[1:])*(-1))
-					if YCoord[0] == "~":
-						YCoord = "~"+str(int(YCoord[1:])*(-1))
 					if ZCoord[0] == "~":
 						ZCoord = "~"+str(int(ZCoord[1:])*(-1))
 
 					oldCommandArray[wordIndex+XCoordIndex] = XCoord
-					oldCommandArray[wordIndex+XCoordIndex+1] = YCoord
 					oldCommandArray[wordIndex+XCoordIndex+2] = ZCoord
 
 			newCommandArray.append(word)
