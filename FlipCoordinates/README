@@ -1,0 +1,3 @@
+FlipCoordinates Filter by jgierer12
+
+Flips relative coordinates in command blocks ("-" -> "+", "+" -> "-")
