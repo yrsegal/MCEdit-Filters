@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
-
-
-
 ########## SetBlock Structure by jgierer12 ###########
 # based on Sethbling"s StructureSpawner Filter
 
 ########## VERSION 1.0 ###########
 # Now including Tile Data!
 # Using new string IDs
+
+
+# -*- coding: utf-8 -*-
 
 
 
