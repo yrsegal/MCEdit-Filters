@@ -1,5 +1,5 @@
 ########## Entities to Command Blocks by jgierer12 ###########
-# for sharktopuskracken
+# for BilboLovesRedstone
 # Converts all entities in the selection to a command block
 
 ########## VERSION 1.0 ###########
