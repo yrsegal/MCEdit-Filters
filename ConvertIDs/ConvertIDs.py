@@ -365,6 +365,7 @@ commands = [
 	("setblock", 4),
 	("testforblock", 4),
 	("give", 2),
+	("clear", 2),
 ]
 
 displayName = "Convert IDs"
