@@ -72,11 +72,8 @@ def flipCoordinates(level, box, options, changes):
 			for (command, XCoordIndex) in commands:
 				if word == command or word == "/"+command:
 					XCoord = oldCommandArray[wordIndex+XCoordIndex]
-					print XCoord
 					YCoord = oldCommandArray[wordIndex+XCoordIndex+1]
-					print YCoord
 					ZCoord = oldCommandArray[wordIndex+XCoordIndex+2]
-					print ZCoord
 
 					if XCoord[0] == "~":
 						XCoord = "~"+str(int(XCoord[1:])*(-1))
