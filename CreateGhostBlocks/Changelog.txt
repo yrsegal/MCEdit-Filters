@@ -1,0 +1,6 @@
+########## VERSION 1.2 ###########
+# Added Clock
+# Added Sign Text
+# Changed Placement of Command Blocks
+
+...
