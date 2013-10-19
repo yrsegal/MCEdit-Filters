@@ -1,1 +1,4 @@
+########## VERSION 1.1 ###########
+# Fixed a bug: [MAJOR] With some commands the filter will flip the y coordinate instead of the x
+
 ########## VERSION 1.0 ###########
