@@ -1,0 +1,11 @@
+########## VERSION 1.3 ###########
+# Now supports /clear
+
+########## VERSION 1.2 ###########
+# There are now 3 different modes: Old ID -> New ID, New ID -> Old ID, Toggle
+# Fixed a bug: [MINOR] The filter doesn't convert IDs in "nested" commands (eg. "/setblock ~ ~2 ~ 137 0 replace {Command:/setblock ~ ~2 ~ 1}" -> "/setblock ~ ~2 ~ minecraft:command_block 0 replace {Command:/setblock ~ ~2 ~ 1}" and not "/setblock ~ ~2 ~ minecraft:command_block 0 replace {Command:/setblock ~ ~2 ~ minecraft:stone}")
+
+########## VERSION 1.1 ###########
+# Now supports /give
+
+########## VERSION 1.0 ###########
