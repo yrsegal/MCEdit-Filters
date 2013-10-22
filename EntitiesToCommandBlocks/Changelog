@@ -1,1 +1,4 @@
+########## VERSION 1.1 ###########
+# Fixed a bug: [MAJOR] Filter won't work if there are TileEntities in the way
+
 ########## VERSION 1.0 ###########
