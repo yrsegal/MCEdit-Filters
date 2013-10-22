@@ -2,7 +2,8 @@
 # for BilboLovesRedstone
 # Converts all entities in the selection to a command block
 
-########## VERSION 1.0 ###########
+########## VERSION 1.1 ###########
+# Fixed a bug: [MAJOR] Filter won't work if there are TileEntities in the way
 
 
 from pymclevel import TAG_List
@@ -72,8 +73,12 @@ def createCmdBlocks(level, box, options, spawns):
 
 		level.setBlockAt(eposX, eposY, eposZ, 137) # Command Block
 
-		cmd = cmdBlock((eposX, eposY, eposZ), command)
 		chunk = getChunk(eposX, eposZ)
+		for tileEntitie in chunk.TileEntities:
+			if tileEntitie["x"].value == eposX and tileEntitie["y"].value == eposY and tileEntitie["z"].value == eposZ:
+				chunk.TileEntities.remove(tileEntitie)
+
+		cmd = cmdBlock((eposX, eposY, eposZ), command)
 		chunk.TileEntities.append(cmd)
 		chunk.dirty = True
 
