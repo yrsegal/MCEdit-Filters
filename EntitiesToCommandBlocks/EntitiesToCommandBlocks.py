@@ -25,6 +25,18 @@ import math
 displayName = "Entities to Command Blocks"
 
 inputs = (
+	(
+		("Instructions", "title"),
+
+		("Step I: Select all entities that will be included"),
+		("Step II: Select the region where the Command Blocks are generated"),
+	),
+
+	(
+		("General", "title"),
+
+		("Step: ", ("I", "II")),
+	),
 )
 
 ########## Fast data access ##########
