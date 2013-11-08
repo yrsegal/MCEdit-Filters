@@ -2,7 +2,8 @@
 # for Garfield100
 # Creates Command Blocks that test for a specific block in an area and, if it detects it, sets the corresponding block in another area
 
-########## VERSION 1.0 ###########
+########## VERSION 1.1 ###########
+# fixed a bug: [MAJOR] Repeaters are added after 16 instead of 15 redstone
 
 
 from pymclevel import TAG_List
@@ -366,7 +367,7 @@ inputs = [
 	(
 		("Step 1: Select the input area", "label"),
 		("Step 2: Select the output area (make sure it has exactly the same dimensions as the input area)", "label"),
-		("Step 3: Select the area where the command blocks are generated", "label"),
+		("Step 3: Select the area where the Command Blocks are generated", "label"),
 		("Instructions", "title"),
 	),
 
@@ -598,7 +599,7 @@ def getNewPos(x, y, z, box, level, rsLen, direction):
 		if z < box.maxz-3:
 			z = z+1
 
-			if rsLen >= 16:
+			if rsLen >= 15:
 				rsLen = 0
 
 				level.setBlockAt(x, y+1, z, 159) # Block
@@ -643,7 +644,7 @@ def getNewPos(x, y, z, box, level, rsLen, direction):
 		if z > box.minz+3:
 			z = z-1
 
-			if rsLen >= 16:
+			if rsLen >= 15:
 				rsLen = 0
 
 				level.setBlockAt(x, y+1, z, 159) # Block
