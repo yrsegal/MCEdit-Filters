@@ -476,7 +476,7 @@ def perform(level, box, options):
 	else:
 		if inputProperties and outputProperties:
 			if box.maxx-box.minx < 4:
-				raise Exception("The selection must be at least 3 blocks deep (x dimension)")
+				raise Exception("The selection must be at least 4 blocks deep (x dimension)")
 			elif box.maxz-box.minz < 5:
 				raise Exception("The selection must be at least 5 blocks wide (z dimension)")
 
