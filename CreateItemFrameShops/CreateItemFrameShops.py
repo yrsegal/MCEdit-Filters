@@ -367,7 +367,7 @@ inputs = (
 	("Step 2: Select the area where the Command Blocks are generated", "label"),
 	("", "label"),
 	("Step: ", ("I", "II")),
-	("/give selector (\"//x\" etc. will be converted to position of the item frame): ", ("string", "value=@p[//x,//y,//z,r\=3]")),
+	("/give selector (\"//x\" etc. will be converted to position of the item frame): ", ("string", "value=@p[//x,//y,//z]")),
 )
 
 ########## Fast data access ##########
