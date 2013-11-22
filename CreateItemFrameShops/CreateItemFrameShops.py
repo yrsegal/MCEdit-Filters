@@ -1,8 +1,10 @@
 ########## Create Item Frame Shops by jgierer12 ###########
 # for Purple_
-# Creates Shops from Item Frames using Block 36. Watch http://www.youtube.com/watch?v=5GkxBFKtrfo&feature=share&list=UUAWk-nmOdbcE8geIC66C3Mg for more information & explanation!
+# Creates Shops from Item Frames using Block 36. Watch http://youtu.be/wyTDHd5xTPE for more information & explanation!
 
-########## VERSION 1.0 ###########
+########## VERSION 1.1 ###########
+# fix bug #5 (CreateItemFrameShops)
+# update video link
 
 
 from pymclevel import TAG_List
