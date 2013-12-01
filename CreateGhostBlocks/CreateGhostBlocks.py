@@ -1,11 +1,6 @@
 ########## Create Ghost Blocks by jgierer12 ###########
 # for destruc7i0n
 
-########## VERSION 1.2 ###########
-# Added Clock
-# Added Sign Text
-# Changed Placement of Command Blocks
-
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
