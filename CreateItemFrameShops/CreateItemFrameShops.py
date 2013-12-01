@@ -2,10 +2,6 @@
 # for Purple_
 # Creates Shops from Item Frames using Block 36. Watch http://youtu.be/wyTDHd5xTPE for more information & explanation!
 
-########## VERSION 1.1 ###########
-# fix bug #5 (CreateItemFrameShops)
-# update video link
-
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
