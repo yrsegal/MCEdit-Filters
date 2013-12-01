@@ -2,9 +2,6 @@
 # for Garfield100
 # Creates Command Blocks that test for a specific block in an area and, if it detects it, sets the corresponding block in another area
 
-########## VERSION 1.1 ###########
-# fixed a bug: [MAJOR] Repeaters are added after 16 instead of 15 redstone
-
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
