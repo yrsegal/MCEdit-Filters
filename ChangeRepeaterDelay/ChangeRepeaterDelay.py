@@ -2,8 +2,6 @@
 # for destruc7i0n
 # Changes the delay of every repeater in the selection
 
-########## VERSION 1.0 ###########
-
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
 from pymclevel import TAG_Int
