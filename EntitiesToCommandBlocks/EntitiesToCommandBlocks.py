@@ -18,7 +18,6 @@ import math
 
 
 
-
 displayName = "Entities to Command Blocks"
 
 inputs = (
