@@ -2,9 +2,6 @@
 # for magib1
 # Flips relative coordinates in command blocks ("-" -> "+", "+" -> "-")
 
-########## VERSION 1.1 ###########
-# Fixed a bug: [MAJOR] With some commands the filter will flip the y coordinate instead of the x
-
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
