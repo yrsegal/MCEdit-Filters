@@ -2,9 +2,6 @@
 # for sharktopuskracken
 # Converts old integer IDs to string IDs ('minecraft:' IDs)
 
-########## VERSION 1.3 ###########
-# Now supports /clear
-
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
