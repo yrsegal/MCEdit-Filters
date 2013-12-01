@@ -2,9 +2,6 @@
 # for BilboLovesRedstone
 # Converts all entities in the selection to a command block
 
-########## VERSION 1.1 ###########
-# Fixed a bug: [MAJOR] Filter won't work if there are TileEntities in the way
-
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
@@ -28,7 +25,7 @@ inputs = (
 	(
 		("Instructions", "title"),
 
-		("Step I: Select all entities that will be included"),
+		("Step I: Select a region with entities"),
 		("Step II: Select the region where the Command Blocks are generated"),
 	),
 
@@ -68,35 +65,78 @@ def dataAt(x, y, z):
 		return 0
 	return chunk.Data[x%16][z%16][y]
 	
+def tileEntityAt(x, y, z):
+	chunk = getChunk(x, z)
+	if chunk == None:
+		return 0
+	return chunk.tileEntityAt(x, y, z)
+
+def setBlockAt(x, y, z, block):
+	chunk = getChunk(x, z)
+	if chunk == None:
+		return 0
+	chunk.Blocks[x%16][z%16][y] = block
+
+def setDataAt(x, y, z, data):
+	chunk = getChunk(x, z)
+	if chunk == None:
+		return 0
+	chunk.Data[x%16][z%16][y] = data
+
+def tileEntityAt(x, y, z):
+	chunk = getChunk(x, z)
+	if chunk == None:
+		return 0
+	return chunk.tileEntityAt(x, y, z)
+
 ########## End fast data access ##########
 
 def perform(level, box, options):
 	global GlobalLevel
 	GlobalLevel = level
 
-	spawns = getSpawns(level, box, options)
-	createCmdBlocks(level, box, options, spawns)
+	global spawns
+
+	if options["Step: "] == "I":
+		spawns = getSpawns(box, options)
+
+		if spawns == []:
+			spawns = None;
+			raise Exception("Please select an area with entities!")
+
+	else:
+		if spawns:
+			createCmdBlocks(level, box, options, spawns)
+
+		else:
+			raise Exception("Please select an area with entities first!")
 
 def createCmdBlocks(level, box, options, spawns):
+	x = box.minx
+	y = box.miny
+	z = box.minz
+
 	for (eposX, eposY, eposZ, entity) in spawns:
 		dataTags = tagCode(entity)
-		command = "/summon "+entity["id"].value+" ~ ~ ~ "+dataTags
-		command = command[:len(command)-1]
+		command = "/summon "+entity["id"].value+" "+eposX+" "+eposY+" "+eposZ+" "+dataTags
 
-		level.setBlockAt(eposX, eposY, eposZ, 137) # Command Block
-
-		chunk = getChunk(eposX, eposZ)
-		for tileEntitie in chunk.TileEntities:
-			if tileEntitie["x"].value == eposX and tileEntitie["y"].value == eposY and tileEntitie["z"].value == eposZ:
-				chunk.TileEntities.remove(tileEntitie)
-
-		cmd = cmdBlock((eposX, eposY, eposZ), command)
+		level.setBlockAt(x, y, z, 137) # Command Block
+		cmd = cmdBlock((x, y, z), command)
+		chunk = getChunk(x, z)
 		chunk.TileEntities.append(cmd)
 		chunk.dirty = True
 
-		
-
-
+		if x+1 < box.maxx:
+			x = x+1
+		elif z+1 < box.maxz:
+			z = z+1
+			x = box.minx
+		elif y+2 < box.maxy:
+			y = y+2
+			x = box.minx
+			z = box.minz
+		else:
+			raise Exception("Your selection is too small!")
 
 def getSpawns(level, box, options):
 	spawns = []
