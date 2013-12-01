@@ -20,12 +20,12 @@ import math
 
 displayName = "Entities to Command Blocks"
 
-inputs = (
+inputs = [
 	(
 		("Instructions", "title"),
 
-		("Step I: Select a region with entities"),
-		("Step II: Select the region where the Command Blocks are generated"),
+		("Step I: Select a region with entities", "label"),
+		("Step II: Select the region where the Command Blocks are generated", "label"),
 	),
 
 	(
@@ -33,7 +33,7 @@ inputs = (
 
 		("Step: ", ("I", "II")),
 	),
-)
+]
 
 ########## Fast data access ##########
 from pymclevel import ChunkNotPresent
@@ -97,7 +97,7 @@ def perform(level, box, options):
 	global spawns
 
 	if options["Step: "] == "I":
-		spawns = getSpawns(box, options)
+		spawns = getSpawns(level, box, options)
 
 		if spawns == []:
 			spawns = None;
@@ -117,10 +117,10 @@ def createCmdBlocks(level, box, options, spawns):
 
 	for (eposX, eposY, eposZ, entity) in spawns:
 		dataTags = tagCode(entity)
-		command = "/summon "+entity["id"].value+" "+eposX+" "+eposY+" "+eposZ+" "+dataTags
+		command = "/summon "+entity["id"].value+" "+str(eposX)+" "+str(eposY)+" "+str(eposZ)+" "+dataTags
 
 		level.setBlockAt(x, y, z, 137) # Command Block
-		cmd = cmdBlock((x, y, z), command)
+		cmd = cmdBlock((x, y, z), command[:len(command)-1])
 		chunk = getChunk(x, z)
 		chunk.TileEntities.append(cmd)
 		chunk.dirty = True
