@@ -2,8 +2,6 @@
 # for Beatmeup50
 # Randomizes the slot of items in a chest
 
-########## VERSION 1.0 ###########
-
 
 
 from pymclevel import TAG_List
