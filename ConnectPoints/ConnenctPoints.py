@@ -21,8 +21,8 @@ import math
 displayName = "Connect Points"
 
 inputs = (
-	("Blocks to connect: ", "blocktype"),
-	("Connect with: ", "blocktype"),
+	("connect", "blocktype"),
+	("with", "blocktype"),
 )
 
 ########## Fast data access ##########
@@ -94,13 +94,13 @@ def getBlocks(box, options):
 	for x in xrange(box.minx, box.maxx):
 		for z in xrange(box.minz, box.maxz):
 			for y in xrange(box.maxy-1, box.miny-1, -1):
-				if blockAt(x, y, z) == options["Blocks to connect: "].ID and dataAt(x, y, z) == options["Blocks to connect: "].blockData:
+				if blockAt(x, y, z) == options["connect"].ID and dataAt(x, y, z) == options["connect"].blockData:
 					blocks.append((x, y, z))
 
 	if len(blocks) > 2:
-		raise Exception("There are more than 2 Blocks with the ID "+str(options["Blocks to connect: "].ID)+" and the Data Value "+str(options["Blocks to connect: "].blockData)+"!")
+		raise Exception("There are more than 2 Blocks with the ID "+str(options["connect"].ID)+" and the Data Value "+str(options["connect"].blockData)+"!")
 	elif len(blocks) < 2:
-		raise Exception("There are less than 2 Blocks with the ID "+str(options["Blocks to connect: "].ID)+" and the Data Value "+str(options["Blocks to connect: "].blockData)+"!")
+		raise Exception("There are less than 2 Blocks with the ID "+str(options["connect"].ID)+" and the Data Value "+str(options["connect"].blockData)+"!")
 
 	return blocks
 
@@ -174,6 +174,6 @@ def connect(level, options, blocks):
 			bY = blocks[0][1]+b3*facY
 			bZ = blocks[0][2]+b1*facZ
 
-		level.setBlockAt(bX, bY, bZ, options["Connect with: "].ID)
-		level.setBlockDataAt(bX, bY, bZ, options["Connect with: "].blockData)
+		level.setBlockAt(bX, bY, bZ, options["with"].ID)
+		level.setBlockDataAt(bX, bY, bZ, options["with"].blockData)
 		getChunk(bX, bZ).dirty = True
