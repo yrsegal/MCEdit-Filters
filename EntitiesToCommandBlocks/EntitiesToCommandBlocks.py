@@ -1,6 +1,5 @@
-########## Entities to Command Blocks by jgierer12 ###########
-# for BilboLovesRedstone
-# Converts all entities in the selection to a command block
+#### Entities to Command Blocks ####
+# Filter for MCEdit by jgierer12, suggested by BilboLovesRedstone
 
 
 from pymclevel import TAG_List

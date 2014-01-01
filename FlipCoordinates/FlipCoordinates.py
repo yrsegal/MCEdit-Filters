@@ -1,6 +1,5 @@
-########## Flip Coordinates by jgierer12 ###########
-# for magib1
-# Flips relative coordinates in command blocks ("-" -> "+", "+" -> "-")
+#### Flip Coordinates ####
+# Filter for MCEdit by jgierer12, suggested by magib1
 
 
 from pymclevel import TAG_List

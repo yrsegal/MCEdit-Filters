@@ -1,6 +1,5 @@
-########## Connect Points by jgierer12 ###########
-# for SlinkyThePanda
-# Connects two blocks with a diagonal line
+#### Connect Points ####
+# Filter for MCEdit by jgierer12, suggested by SlinkyThePanda
 
 
 from __future__ import division

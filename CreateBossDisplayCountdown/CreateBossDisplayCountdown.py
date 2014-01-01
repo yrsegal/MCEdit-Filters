@@ -1,7 +1,5 @@
-########## Create Boss Display/Countdown by jgierer12 ###########
-# Creates a Countdown using the health bar of an Ender Dragon
-# Can also be used as a permanent display of a short text
-# as seen on many servers (e.g. mc.hypixel.net)
+#### Create Boss Display/Countdown ####
+# Filter for MCEdit by jgierer12
 
 # -*- coding: utf-8 -*-
 # Nasty little unicode symbolses

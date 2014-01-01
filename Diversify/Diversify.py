@@ -1,5 +1,5 @@
-# You may modify and reuse this filter, but if you do, please give credit to WumpaCraft
-# Edited for 247FlashGames by destruc7i0n & jgierer12
+#### Diversify ####
+# Filter for MCEdit by WumpaCraft, modified by destruc7i0n and jgierer12
 # http://youtube.com/WumpaCraft
 # http://youtube.com/TheDestruc7i0n
 

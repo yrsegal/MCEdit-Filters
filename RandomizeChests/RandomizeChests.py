@@ -1,6 +1,5 @@
-########## Randomize Chests by jgierer12 ###########
-# for Beatmeup50
-# Randomizes the slot of items in a chest
+#### Randomize Chests ####
+# Filter for MCEdit by jgierer12, suggested by Beatmeup50
 
 
 

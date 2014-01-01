@@ -1,4 +1,5 @@
-# MCEdit Filter by CrushedPixel edited a bit by destruc7i0n & jgierer12
+#### Terraforming Stained Glass/Clay ####
+# Filter for MCEdit by CrushedPixel, modified by destruc7i0n and jgierer12
 # http://youtube.com/CrushedPixel
 # http://youtube.com/TheDestruc7i0n
 

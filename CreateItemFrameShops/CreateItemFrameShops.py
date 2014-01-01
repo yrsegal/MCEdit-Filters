@@ -1,6 +1,5 @@
-########## Create Item Frame Shops by jgierer12 ###########
-# for Purple_
-# Creates Shops from Item Frames using Block 36. Watch http://youtu.be/wyTDHd5xTPE for more information & explanation!
+#### Create Item Frame Shops ####
+# Filter for MCEdit by jgierer12
 
 
 from pymclevel import TAG_List

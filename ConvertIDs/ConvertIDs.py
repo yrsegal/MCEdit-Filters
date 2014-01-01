@@ -1,6 +1,5 @@
-########## Convert IDs by jgierer12 ###########
-# for sharktopuskracken
-# Converts old integer IDs to string IDs ('minecraft:' IDs)
+#### Convert IDs ####
+# Filter for MCEdit by jgierer12, suggested by sharktopuskracken
 
 
 from pymclevel import TAG_List

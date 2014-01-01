@@ -1,6 +1,5 @@
-########## Change Repeater Delay by jgierer12 ###########
-# for destruc7i0n
-# Changes the delay of every repeater in the selection
+#### Change Repeater Delay ####
+# Filter for MCEdit by jgierer12, suggested by destruc7i0n
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte

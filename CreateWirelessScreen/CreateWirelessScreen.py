@@ -1,6 +1,5 @@
-########## Create Wireless Screen by jgierer12 ###########
-# for Garfield100
-# Creates Command Blocks that test for a specific block in an area and, if it detects it, sets the corresponding block in another area
+#### Create Wireless Screen ####
+# Filter for MCEdit by jgierer12, suggested by Garfield100
 
 
 from pymclevel import TAG_List

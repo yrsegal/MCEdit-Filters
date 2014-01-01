@@ -1,5 +1,5 @@
-########## Create Ghost Blocks by jgierer12 ###########
-# for destruc7i0n
+#### Create Ghost Blocks ####
+# Filter for MCEdit by jgierer12, suggested by destruc7i0n
 
 
 from pymclevel import TAG_List
