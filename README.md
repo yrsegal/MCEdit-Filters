@@ -1,4 +1,4 @@
-# MCEdit Filters by jgierer12
+# MCEdit Filters by jgierer12 and destruc7i0n
 
 Filters for MCEdit (http://www.mcedit.net) by jgierer12 and destruc7i0n
 
