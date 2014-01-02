@@ -27,6 +27,8 @@ def perform(level, box, options):
 		for y in xrange(box.miny, box.maxy):
 			for z in xrange(box.minz, box.maxz):
 
+			    # Always a problem after here BTW
+			
 				if oneBlockOnlyTF == True and changeAllBlocksTF == False and level.blockAt(x, y, z) == oneBlockOnly:
 					level.setBlockDataAt(x, y, z, oneBlockOnlyData) 
 				elif changeAllBlocksTF == True and oneBlockOnlyTF == False
