@@ -1,36 +1,36 @@
 #### Change Block Data ####
-# Filter for MCEdit by destruc7i0n with a little help of jgierer12 :)
+# Filter for MCEdit by destruc7i0n, modified by jgierer12
 # Based off of many of jgierer12's Filters
 # http://youtube.com/TheDestruc7i0n
+
+import pymclevel
+import random
 
 displayName = "Set Block Data Value"
 
 inputs = (
-	("One Block To Change Data Only: ", "blocktype"),
-	("Use Only One Block: ", True),
-	("Block Data For One Block: ", 1), 
-	("Change All Blocks In Region To A Data: ", False),
-	("Block Data Value: ", 1),
-	("Please Only Select One Option!", "label"),
+	("Only change Data of this Block: ", "blocktype"),
+	("(Set to air to change data of all Blocks in the selection)", "label"),
+	("Block Data Value: ", 0),
+	("Diversify It!", False),
 )
 
+canDiversify = [35, 95, 159, 160, 171]
+
 def perform(level, box, options):
-	oneBlockOnly = options["One Block To Change Data Only: "].ID
-	oneBlockOnlyTF = options["Use Only One Block: "]
-	oneBlockOnlyData = options["Block Data For One Block: "]
-	changeAllBlocksTF = options["Change All Blocks In Region To A Data: "]
-	changeAllBlocksData = options["Block Data Value: "]
+	changeBlock = options["Only change Data of this Block: "].ID
+	data = options["Block Data Value: "]
+	diversifyIt = options["Diversify It!"]
 	
-	if oneBlockOnlyTF == True and changeAllBlocksTF == True:
-		raise Exception('Only check one box between "Use Only One Block" and "Change All Blocks In Region To A Data"')
- 
 	for x in xrange(box.minx, box.maxx):
 		for y in xrange(box.miny, box.maxy):
 			for z in xrange(box.minz, box.maxz):
-				if oneBlockOnlyTF == True and changeAllBlocksTF == False and level.blockAt(x, y, z) == oneBlockOnly:
-					level.setBlockDataAt(x, y, z, oneBlockOnlyData)
-				elif changeAllBlocksTF == True and oneBlockOnlyTF == False:
-					level.setBlockDataAt(x, y, z, changeAllBlocksData)
+				block = level.blockAt(x, y, z)
+				
+				if (changeBlock != 0 and block == changeBlock) or changeBlock == 0:
+					level.setBlockDataAt(x, y, z, data)
+
+				if diversifyIt and block in canDiversify:
+					level.setBlockDataAt(x, y, z, random.randint(0,15))
 
 	level.markDirtyBox(box)
-		
