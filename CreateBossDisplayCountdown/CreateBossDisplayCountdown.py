@@ -74,7 +74,7 @@ def getChunk(x, z):
 
 def blockAt(x, y, z):
     chunk = getChunk(x, z)
-    if chunk is not None:
+    if chunk is None:
         return 0
     return chunk.Blocks[x % 16][z % 16][y]
 
@@ -130,7 +130,7 @@ def perform(level, box, options):
     GlobalLevel = level
 
     step = options["Step:"]
-    type = options["Type:"]
+    cirquitType = options["Type:"]
     displayName = options["Display Name:"]
     countdownStart = options["Start Countdown at:"]
     countdownName = options["Countdown Name:"]
@@ -142,9 +142,9 @@ def perform(level, box, options):
     printDetailedLog(["~~~~~ Filter Log ~~~~~", "Step: " + step], detailedLog)
 
     if step == "I":
-        printDetailedLog(["Type: " + type], detailedLog)
+        printDetailedLog(["Type: " + cirquitType], detailedLog)
 
-        if type == "Display":
+        if cirquitType == "Display":
             printDetailedLog(["Display Name: " + displayName], detailedLog)
 
             typeSpecific = (healthBar, displayName)
@@ -163,7 +163,7 @@ def perform(level, box, options):
 
         printDetailedLog(["Successfully generated the dragon holding cell!", "Writing properties to global variable bossDisplayCountdownProperties..."], detailedLog)
 
-        bossDisplayCountdownProperties = (dragonPos, type, typeSpecific)
+        bossDisplayCountdownProperties = (dragonPos, cirquitType, typeSpecific)
 
         printDetailedLog(["Successfully wrote properties to global variable bossDisplayCountdownProperties!"], detailedLog)
 
@@ -229,6 +229,7 @@ def getDragonPos(box, detailedLog):
             airColumn = True
 
             for y in xrange(0, box.miny):
+                print blockAt(x, y, z)
                 if blockAt(x, y, z) != 0:
                     airColumn = False
                     break
@@ -265,13 +266,13 @@ def generateDragonCell(box, (x, y, z)):
     markDirty((x-1, x+1), (z-1, z+1))
 
 
-def generateRedstone(box, (dragonPos, type, typeSpecific), detailedLog):
+def generateRedstone(box, (dragonPos, cirquitType, typeSpecific), detailedLog):
     if box.maxx-box.minx < 6 or box.maxy-box.miny < 4 or box.maxz-box.minz < 2:
         printDetailedLog(["Redstone won't fit into the selection!", "Raising Error message..."], detailedLog)
 
         raise Exception("The selection must be bigger!")
 
-    if type == "Display":
+    if cirquitType == "Display":
         healthBar = typeSpecific[0]
         name = typeSpecific[1]
         baseHealth = 1.25*(100/float(healthBar))
@@ -316,7 +317,7 @@ def generateRedstone(box, (dragonPos, type, typeSpecific), detailedLog):
     setBlockAt(redstoneX+4, redstoneY+1, redstoneZ, 93)
     setDataAt(redstoneX+4, redstoneY+1, redstoneZ, 1)
 
-    if type == "Display":
+    if cirquitType == "Display":
         AddSign(redstoneX, redstoneY+1, redstoneZ, "Wall", "-X", "", "Reset", "", "")
         setBlockAt(redstoneX+2, redstoneY, redstoneZ, 159)
         setDataAt(redstoneX+2, redstoneY, redstoneZ, 9)
@@ -356,7 +357,7 @@ def AddCommandBlock(x, y, z, command):
     level.setBlockDataAt(x, y, z, 0)
 
 
-def AddSign(x, y, z, type, direction, text1, text2, text3, text4):
+def AddSign(x, y, z, signType, direction, text1, text2, text3, text4):
     global GlobalLevel
     level = GlobalLevel
     chunk = level.getChunk(x/16, z/16)
@@ -375,7 +376,7 @@ def AddSign(x, y, z, type, direction, text1, text2, text3, text4):
     chunk.TileEntities.append(sign)
     chunk.dirty = True
 
-    if type == "Wall":
+    if signType == "Wall":
         level.setBlockAt(x, y, z, 68)
         if direction == "+X":
             level.setBlockDataAt(x, y, z, 5)
