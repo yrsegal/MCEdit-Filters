@@ -45,13 +45,21 @@ from pymclevel import TAG_String
 from pymclevel import TAG_Int_Array
 from pymclevel import TAG_Float
 from pymclevel import TAG_Long
-import win32ui
+
+try:
+    import win32ui
+except:
+    pass
+
 import zipfile
 from functools import partial
 
 displayName = "Text to Book"
 
 inputs = (
+    ("Convert", ("string", "value=")),
+    ("to a book (Leave blank for GUI File selector)", "label"),
+    ("", "label"),
     ("Make", ("string", "value=Notch")),
     ("the author of the book", False),
     ("", "label"),
@@ -259,12 +267,29 @@ def perform(level, box, options):
     global GlobalLevel
     GlobalLevel = level
 
-    openFile = win32ui.CreateFileDialog(1, None, None, 0, "All Files (*.*)|*.*|Text Files (*.txt)|*.txt|Word Files (*.docx)|*.docx|")
-    openFile.DoModal()
-    openedFileDir = openFile.GetPathName()
-    openedFileExt = openFile.GetFileExt()
+    if options["Convert"] == "":
+        try:
+            openFile = win32ui.CreateFileDialog(1, None, None, 0, "All Files (*.*)|*.*|Text Files (*.txt)|*.txt|Word Files (*.docx)|*.docx|")
+            openFile.DoModal()
+            openedFileDir = openFile.GetPathName()
+            openedFileExt = openFile.GetFileExt()
+            bookTitle = openFile.GetFileName()
 
-    bookTitle = openFile.GetFileName()
+        except:
+            raise Exception("win32ui could not be imported! Please enter the file path manually.")
+
+    else:
+        openedFileDir = options["Convert"]
+        openedFileExt = openedFileDir[len(openedFileDir)-4:]
+        bookTitle = openedFileDir[:len(openedFileDir)-5]
+        if openedFileExt[0] == ".":
+            openedFileExt = openedFileExt[1:]
+            bookTitle = openedFileDir[:len(openedFileDir)-4]
+
+        while "/" in bookTitle:
+            bookTitle = bookTitle[bookTitle.find("/")+1:]
+        print bookTitle
+
     if options["Title of the book will be"] == "the file name without extension":
         bookTitle = bookTitle[:len(bookTitle)-len(openedFileExt)-1]
     elif options["Title of the book will be"] == "a custom title":
