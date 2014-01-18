@@ -288,7 +288,6 @@ def perform(level, box, options):
 
         while "/" in bookTitle:
             bookTitle = bookTitle[bookTitle.find("/")+1:]
-        print bookTitle
 
     if options["Title of the book will be"] == "the file name without extension":
         bookTitle = bookTitle[:len(bookTitle)-len(openedFileExt)-1]
