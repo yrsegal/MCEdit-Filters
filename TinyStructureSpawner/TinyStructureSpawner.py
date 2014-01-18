@@ -12,9 +12,9 @@ from pymclevel import TAG_Float
 from pymclevel import TAG_String
 from pymclevel import TAG_Long
 from pymclevel import TAG_Int_Array
- 
+
 displayName = "Tiny Structure Spawner"
- 
+
 inputs = (
         ("Spawner's Relative Position:", "label"),
         ("dx", 0),
@@ -25,7 +25,7 @@ inputs = (
         ("Create Deleter", True),
         ("Include Air Blocks", False),
 )
- 
+
 def perform(level,box,options):
         dx = options["dx"]
         dy = options["dy"]
@@ -33,84 +33,84 @@ def perform(level,box,options):
         cr = options["Create Spawner"]
         cd = options["Create Deleter"]
         iab = options["Include Air Blocks"]
-       
+
         if dx == 0:
                 rsx = (box.maxx + box.minx) / 2
         if dy == 0:
                 rsy = (box.maxy + box.miny) / 2
         if dz == 0:
                 rsz = (box.maxz + box.minz) / 2
-               
+
         if dx < 0:
                 rsx = box.minx + dx - 5
         if dy < 0:
                 rsy = box.miny + dy - 2
         if dz < 0:
                 rsz = box.minz + dz - 5
-       
+
         if dx > 0:
                 rsx = box.maxx + dx + 5
         if dy > 0:
                 rsy = box.maxy + dy + 5
         if dz > 0:
                 rsz = box.maxz + dz + 2
-       
+
         if cr:
                 createStructure(rsx,rsy,rsz,level,1)
-       
+
         if cd:
                 createStructure(rsx-3,rsy,rsz,level,0)
 
-        minecartCount = 0       
+        minecartCount = 0
         for x in xrange(box.minx,box.maxx):
                 for y in xrange(box.miny,box.maxy):
                         for z in xrange(box.minz,box.maxz):
                                 id = level.blockAt(x,y,z)
                                 data = level.blockDataAt(x,y,z)
                                 te = level.tileEntityAt(x,y,z)
-                               
+
                                 if x < 0:
                                         blockx = x-1
                                 else:
                                         blockx = x
-                                       
+
                                 if z < 0:
                                         blockz = z
                                 else:
                                         blockz = z+1
-                               
+
                                 if id != 1000 and iab == True:
                                         if cr:
                                                 minecartCount = createCartBlock(rsx,rsy-1,rsz-3,level,1,blockx,y,blockz-1,id,data,te,minecartCount) #Create-Mode
                                         if cd:
                                                 minecartCount = createCartBlock(rsx-3,rsy-1,rsz-3,level,0,blockx,y,blockz-1,id,data,te,minecartCount) #Destroy-Mode
- 
+
                                 if id != 0 and iab == False:
                                         if cr:
                                                 minecartCount = createCartBlock(rsx,rsy-1,rsz-3,level,1,blockx,y,blockz-1,id,data,te,minecartCount) #Create-Mode
                                         if cd:
                                                 minecartCount = createCartBlock(rsx-3,rsy-1,rsz-3,level,0,blockx,y,blockz-1,id,data,te,minecartCount) #Destroy-Mode
-                                               
+
         if options["Spawn Entities"]:
-                for (chunk, slices, point) in level.getChunkSlices(box):       
+                for (chunk, slices, point) in level.getChunkSlices(box):
                         for entity in chunk.Entities:
                                 x = int(entity["Pos"][0].value-0.5)
                                 y = int(entity["Pos"][1].value)
                                 z = int(entity["Pos"][2].value-0.5)
-                               
+
                                 if x >= box.minx and x < box.maxx and y >= box.miny and y < box.maxy and z >= box.minz and z < box.maxz:
                                         ent = str(entity)
-                                        ent = CleanTAG(ent)            
+                                        ent = CleanTAG(ent)
                                         minecartCount = createCartEntity(rsx,rsy-1,rsz-3,level,entity["Pos"][0].value, entity["Pos"][1].value, entity["Pos"][2].value, entity["id"].value, ent, minecartCount)
-               
-               
-                                               
+
+
+
 def CleanTAG(te):
         tileEntity = te
-       
+
         while '  ' in tileEntity:
                 tileEntity = tileEntity.replace('  ', ' ')
-       
+
         tileEntity = tileEntity.replace("\"", '')
         tileEntity = tileEntity.replace("(", '')
         tileEntity = tileEntity.replace(")", '')
@@ -133,7 +133,7 @@ def CleanTAG(te):
         tileEntity = tileEntity.replace(", ", ',')
         tileEntity = tileEntity.replace(",}", '}')
         tileEntity = tileEntity.replace(",]", ']')
-       
+
         return tileEntity
 
 def createSlime(cartx,carty,cartz,chunk):
@@ -168,18 +168,18 @@ def createSlime(cartx,carty,cartz,chunk):
         slime["Rotation"] = rotation
 
         chunk.Entities.append(slime)
- 
+
 def createCartEntity(cartx,carty,cartz,level,ex,ey,ez,eid,e,minecartCount):
         if e != None:
                 e = str(e)
                 e = CleanTAG(e)
         else:
                 e = ''
-       
+
         minecartCommandBlock = TAG_Compound()
-       
+
         minecartCommandBlock["Command"] = TAG_String(u'/summon '+str(eid)+' '+str(ex)+' '+str(ey)+' '+str(ez)+' '+e)
-       
+
         minecartCommandBlock["UUIDLeast"] = TAG_Long(-7988352983206307739)
         minecartCommandBlock["TrackOutput"] = TAG_Byte(1)
         motion = TAG_List()
@@ -207,7 +207,7 @@ def createCartEntity(cartx,carty,cartz,level,ex,ey,ez,eid,e,minecartCount):
         rotation.append(TAG_Float(0.0))
         minecartCommandBlock["Rotation"] = rotation
         minecartCommandBlock["Invulnerable"] = TAG_Byte(0)
- 
+
         chunk = level.getChunk(cartx/16,cartz/16)
         chunk.Entities.append(minecartCommandBlock)
 
@@ -222,14 +222,14 @@ def createCartEntity(cartx,carty,cartz,level,ex,ey,ez,eid,e,minecartCount):
         chunk.dirty = True
 
         return minecartCount
-       
+
 def createCartBlock(cartx,carty,cartz,level,mode,blockx,blocky,blockz,id,data,te,minecartCount):
         if te != None:
                 te = str(te)
                 te = CleanTAG(te)
         else:
                 te = ''
-       
+
         minecartCommandBlock = TAG_Compound()
         if mode == 1:
                 minecartCommandBlock["Command"] = TAG_String(u'/setblock '+str(blockx)+' '+str(blocky)+' '+str(blockz)+' '+str(id)+' '+str(data)+' replace'+' '+te)
@@ -262,7 +262,7 @@ def createCartBlock(cartx,carty,cartz,level,mode,blockx,blocky,blockz,id,data,te
         rotation.append(TAG_Float(0.0))
         minecartCommandBlock["Rotation"] = rotation
         minecartCommandBlock["Invulnerable"] = TAG_Byte(0)
- 
+
         chunk = level.getChunk(cartx/16,cartz/16)
         chunk.Entities.append(minecartCommandBlock)
 
@@ -277,15 +277,15 @@ def createCartBlock(cartx,carty,cartz,level,mode,blockx,blocky,blockz,id,data,te
         chunk.dirty = True
 
         return minecartCount
-       
- 
-       
+
+
+
 def createStructure(rsx,rsy,rsz,level,mode):
         level.setBlockAt(rsx + -1, rsy + -1, rsz + 1, 77)
         level.setBlockDataAt(rsx + -1, rsy + -1, rsz + 1, 2)
-       
+
         chunk = level.getChunk((rsx-1)/16,(rsz+1)/16)
-       
+
         if mode == 1:
                 level.setBlockAt(rsx + -1, rsy + 1, rsz + 1, 68)
                 level.setBlockDataAt(rsx + -1, rsy + 1, rsz + 1, 4)
@@ -296,7 +296,7 @@ def createStructure(rsx,rsy,rsz,level,mode):
                 level.setBlockDataAt(rsx + -1, rsy + 1, rsz + 1, 4)
                 sign = signTileEntity(rsx -1, rsy+1, rsz+1, '==============','Delete','Structure','==============')
                 chunk.TileEntities.append(sign)
-               
+
         level.setBlockAt(rsx + 0, rsy + -2, rsz + -3, 1)
         level.setBlockAt(rsx + 0, rsy + -2, rsz + 0, 1)
         level.setBlockAt(rsx + 0, rsy + -1, rsz + -3, 157)
@@ -314,7 +314,7 @@ def createStructure(rsx,rsy,rsz,level,mode):
         level.setBlockAt(rsx + 0, rsy + 1, rsz + 0, 55)
         level.setBlockDataAt(rsx + 0, rsy + 1, rsz + 0, 15)
         level.setBlockAt(rsx + 0, rsy + 1, rsz + 1, 1)
- 
+
 def signTileEntity(x, y, z, text1, text2, text3, text4):
         sign = TAG_Compound()
         sign["id"] = TAG_String(u'Sign')
@@ -325,5 +325,5 @@ def signTileEntity(x, y, z, text1, text2, text3, text4):
         sign["x"] = TAG_Int(x)
         sign["y"] = TAG_Int(y)
         sign["z"] = TAG_Int(z)
- 
+
         return sign
