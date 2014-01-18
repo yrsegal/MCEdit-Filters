@@ -60,6 +60,8 @@ inputs = (
     ("Convert", ("string", "value=")),
     ("to a book (Leave blank for GUI File selector)", "label"),
     ("", "label"),
+    ("Output to", ("Book Item Entity", "Book Item in Chest", "Give Book Command Block")),
+    ("", "label"),
     ("Make", ("string", "value=Notch")),
     ("the author of the book", False),
     ("", "label"),
@@ -252,14 +254,6 @@ def setDataAt(x, y, z, data):
     if chunk is None:
         return 0
     chunk.Data[x % 16][z % 16][y] = data
-
-
-def tileEntityAt(x, y, z):
-    chunk = getChunk(x, z)
-    if chunk is None:
-        return 0
-    return chunk.tileEntityAt(x, y, z)
-
 ########## End fast data access ##########
 
 
@@ -281,11 +275,10 @@ def perform(level, box, options):
     else:
         openedFileDir = options["Convert"]
         openedFileExt = openedFileDir[len(openedFileDir)-4:]
-        bookTitle = openedFileDir[:len(openedFileDir)-5]
         if openedFileExt[0] == ".":
             openedFileExt = openedFileExt[1:]
-            bookTitle = openedFileDir[:len(openedFileDir)-4]
 
+        bookTitle = openedFileDir
         while "/" in bookTitle:
             bookTitle = bookTitle[bookTitle.find("/")+1:]
 
@@ -416,29 +409,102 @@ def makeBook(level, box, options, totalText, bookTitle):
     y = box.miny
     z = box.minz
 
-    book = TAG_Compound()
-    book["Pos"] = TAG_List()
-    book["Pos"].append(TAG_Double(x))
-    book["Pos"].append(TAG_Double(y))
-    book["Pos"].append(TAG_Double(z))
-    book["id"] = TAG_String("Item")
-    book["Item"] = TAG_Compound()
-    book["Item"]["id"] = TAG_Short(387)
-    book["Item"]["Damage"] = TAG_Short(0)
-    book["Item"]["Count"] = TAG_Byte(1)
-    book["Item"]["tag"] = TAG_Compound()
-    book["Item"]["tag"]["title"] = TAG_String(bookTitle)
-    book["Item"]["tag"]["pages"] = TAG_List()
+    if options["Output to"] == "Book Item Entity":
+        book = TAG_Compound()
+        book["Pos"] = TAG_List()
+        book["Pos"].append(TAG_Double(x))
+        book["Pos"].append(TAG_Double(y))
+        book["Pos"].append(TAG_Double(z))
+        book["id"] = TAG_String("Item")
+        book["Item"] = TAG_Compound()
+        book["Item"]["id"] = TAG_Short(387)
+        book["Item"]["Damage"] = TAG_Short(0)
+        book["Item"]["Count"] = TAG_Byte(1)
+        book["Item"]["tag"] = TAG_Compound()
+        book["Item"]["tag"]["title"] = TAG_String(bookTitle)
+        book["Item"]["tag"]["pages"] = TAG_List()
 
-    if options["the author of the book"] and options["Make"]:
-        book["Item"]["tag"]["author"] = TAG_String(options["Make"])
+        if options["the author of the book"] and options["Make"]:
+            book["Item"]["tag"]["author"] = TAG_String(options["Make"])
 
-    for page in totalText:
-        book["Item"]["tag"]["pages"].append(TAG_String(page))
+        for page in totalText:
+            book["Item"]["tag"]["pages"].append(TAG_String(page))
 
-    chunk = getChunk(x, z)
-    chunk.Entities.append(book)
-    chunk.dirty = True
+        chunk = getChunk(x, z)
+        chunk.Entities.append(book)
+        chunk.dirty = True
+
+    elif options["Output to"] == "Book Item in Chest":
+        setBlockAt(x, y, z, 54)
+
+        global GlobalLevel
+        level = GlobalLevel
+        chunk = level.getChunk(x/16, z/16)
+        te = level.tileEntityAt(x, y, z)
+        if te is not None:
+            chunk.TileEntities.remove(te)
+
+        chest = TAG_Compound()
+        chest["id"] = TAG_String("Chest")
+        chest["x"] = TAG_Int(x)
+        chest["y"] = TAG_Int(y)
+        chest["z"] = TAG_Int(z)
+        chest["Items"] = TAG_List()
+        chest["Items"].append(TAG_Compound())
+        chest["Items"][0]["Slot"] = TAG_Byte(13)
+        chest["Items"][0]["id"] = TAG_Short(387)
+        chest["Items"][0]["Damage"] = TAG_Short(0)
+        chest["Items"][0]["Count"] = TAG_Byte(1)
+        chest["Items"][0]["tag"] = TAG_Compound()
+        chest["Items"][0]["tag"]["title"] = TAG_String(bookTitle)
+        chest["Items"][0]["tag"]["pages"] = TAG_List()
+
+        if options["the author of the book"] and options["Make"]:
+            chest["Items"][0]["tag"]["author"] = TAG_String(options["Make"])
+
+        for page in totalText:
+            chest["Items"][0]["tag"]["pages"].append(TAG_String(page))
+
+        chunk.TileEntities.append(chest)
+        chunk.dirty = True
+
+    elif options["Output to"] == "Give Book Command Block":
+        command = "/give @p minecraft:written_book 1 0 {title:\"" + bookTitle + "\",pages:["
+
+        for page in totalText:
+            command += "\"" + page + "\","
+
+        if len(totalText) > 0:
+            command = command[:len(command)-1]
+
+        command += "]"
+
+        if options["the author of the book"] and options["Make"]:
+            command += ",author:\"" + options["Make"]
+
+        command += "}"
+
+        setBlockAt(x, y, z, 137)
+
+        global GlobalLevel
+        level = GlobalLevel
+        chunk = level.getChunk(x/16, z/16)
+        te = level.tileEntityAt(x, y, z)
+        if te is not None:
+            chunk.TileEntities.remove(te)
+
+        control = TAG_Compound()
+        control["Command"] = TAG_String(command)
+        control["id"] = TAG_String(u'Control')
+        control["CustomName"] = TAG_String(u'@')
+        control["SuccessCount"] = TAG_Int(0)
+        control["x"] = TAG_Int(x)
+        control["y"] = TAG_Int(y)
+        control["z"] = TAG_Int(z)
+        chunk.TileEntities.append(control)
+        chunk.dirty = True
+        level.setBlockAt(x, y, z, 137)
+        level.setBlockDataAt(x, y, z, 0)
 
 
 def getColor(strColor):
