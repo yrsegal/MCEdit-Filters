@@ -321,22 +321,22 @@ def decodeFile(textFile, textFileExt, options):
                     currentType = "text"
                 elif tagText[:3] == "w:i":
                     styles = True
-                    rawText[documentPage][paragraphNumber][0] += u"§o"
+                    rawText[documentPage][paragraphNumber][0] += u"\u00A7o"
                 elif tagText[:3] == "w:b" and tagText != "w:body":
                     styles = True
-                    rawText[documentPage][paragraphNumber][0] += u"§l"
+                    rawText[documentPage][paragraphNumber][0] += u"\u00A7l"
                 elif tagText[:3] == "w:u":
                     styles = True
-                    rawText[documentPage][paragraphNumber][0] += u"§n"
+                    rawText[documentPage][paragraphNumber][0] += u"\u00A7n"
                 elif tagText[:8] == "w:strike":
                     styles = True
-                    rawText[documentPage][paragraphNumber][0] += u"§m"
+                    rawText[documentPage][paragraphNumber][0] += u"\u00A7m"
                 elif tagText[:11] == "w:highlight":
                     styles = True
-                    rawText[documentPage][paragraphNumber][0] += u"§k"
+                    rawText[documentPage][paragraphNumber][0] += u"\u00A7k"
                 elif tagText[:7] == "w:color":
                     styles = True
-                    rawText[documentPage][paragraphNumber][0] += u"§"+getColor(tagText[tagText.find("w:val")+7:tagText.find("w:val")+13])
+                    rawText[documentPage][paragraphNumber][0] += u"\u00A7"+getColor(tagText[tagText.find("w:val")+7:tagText.find("w:val")+13])
                 elif tagText[:4] == "w:sz":
                     if int(tagText[tagText.find("w:val")+7:tagText.find("\"", tagText.find("w:val")+7)]) > options["Convert text bigger than"]*2:
                         if options["fullwidth characters"]:
@@ -350,7 +350,7 @@ def decodeFile(textFile, textFileExt, options):
                     uppercase = False
                     if styles:
                         styles = False
-                        rawText[documentPage][paragraphNumber][0] += u"§r"
+                        rawText[documentPage][paragraphNumber][0] += u"\u00A7r"
                 elif tagText[:4] == "/w:p" and len(tagText) == 4:
                     rawText[documentPage].append([u"", "left"])
                     paragraphNumber += 1
@@ -461,7 +461,7 @@ def splitText(options, rawText):
                 wordWidth = getWidth(options, documentParagraphText[letterIndex:documentParagraphText.find(" ", letterIndex)])
 
                 if totalText[pageNumber][lineNumber] != "":
-                    if totalText[pageNumber][lineNumber][len(totalText[pageNumber][lineNumber])-1] != u"§":
+                    if totalText[pageNumber][lineNumber][len(totalText[pageNumber][lineNumber])-1] != u"\u00A7":
                         letterWidth = getWidth(options, letter)
                     else:
                         wordWidth -= getWidth(options, letter)
@@ -523,7 +523,7 @@ def splitText(options, rawText):
 
     for page in totalText:
         lastLineNumber = len(page)-1
-        while page[lastLineNumber] == "" or page[lastLineNumber] == u"§r" or u"\012" in page[lastLineNumber]:
+        while page[lastLineNumber] == "" or page[lastLineNumber] == u"\u00A7r" or u"\012" in page[lastLineNumber]:
             if u"\012" in page[lastLineNumber]:
                 page[lastLineNumber] = page[lastLineNumber][:len(page[lastLineNumber])-1]
 
@@ -539,7 +539,7 @@ def splitText(options, rawText):
                 pagedText[len(pagedText)-1] += line
 
             if options["to the end of each page"]:
-                pagedText[len(pagedText)-1] += u"§r"+options["Append"]
+                pagedText[len(pagedText)-1] += u"\u00A7r"+options["Append"]
 
     if options["to the end of each page"] and options["but the last one"]:
         lastPageNumber = len(pagedText)-1
@@ -552,7 +552,7 @@ def getWidth(options, text):
     totalWidth = 0
     letterIndex = 0
     for letter in text:
-        if text[letterIndex-1] != u"§":
+        if text[letterIndex-1] != u"\u00A7":
             try:
                 totalWidth += characterWidths[letter]
             except:
