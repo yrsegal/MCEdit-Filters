@@ -46,20 +46,25 @@ from pymclevel import TAG_Int_Array
 from pymclevel import TAG_Float
 from pymclevel import TAG_Long
 
+# waiting for adding a feature to MCEdit
 try:
     import win32ui
 except:
     pass
 
+#from mcplatform import askOpenFile
+#
 import zipfile
 from functools import partial
 
 displayName = "Text to Book"
 
 inputs = (
+    # waiting for adding a feature to MCEdit
     ("Convert", ("string", "value=")),
     ("to a book (Leave blank for GUI File selector)", "label"),
     ("", "label"),
+    #
     ("Output to", ("Book Item Entity", "Book Item in Chest", "Give Book Command Block")),
     ("", "label"),
     ("Make", ("string", "value=Notch")),
@@ -78,7 +83,8 @@ inputs = (
     ("into multiple minecraft pages", True),
     ("", "label"),
     ("Title of the book will be", ("the file name without extension", "the file name with extension", "a custom title")),
-    ("Custom Title", ("string", "value=Book")),
+    ("Use", ("string", "value=Custom Book title")),
+    ("as the custom title", "label"),
     ("", "label"),
     ("Make highlighted text obfuscated", True),
 )
@@ -261,44 +267,59 @@ def perform(level, box, options):
     global GlobalLevel
     GlobalLevel = level
 
+    # waiting for adding a feature to MCEdit
     if options["Convert"] == "":
         try:
             openFile = win32ui.CreateFileDialog(1, None, None, 0, "All Files (*.*)|*.*|Text Files (*.txt)|*.txt|Word Files (*.docx)|*.docx|")
             openFile.DoModal()
-            openedFileDir = openFile.GetPathName()
-            openedFileExt = openFile.GetFileExt()
+            filePath = openFile.GetPathName()
+            fileExtension = openFile.GetFileExt()
             bookTitle = openFile.GetFileName()
 
         except:
             raise Exception("win32ui could not be imported! Please enter the file path manually.")
 
     else:
-        openedFileDir = options["Convert"]
-        openedFileExt = openedFileDir[len(openedFileDir)-4:]
-        if openedFileExt[0] == ".":
-            openedFileExt = openedFileExt[1:]
+        filePath = options["Convert"]
+        fileExtension = filePath[len(filePath)-4:]
+        if fileExtension[0] == ".":
+            fileExtension = fileExtension[1:]
 
-        bookTitle = openedFileDir
+        bookTitle = filePath
         while "/" in bookTitle:
             bookTitle = bookTitle[bookTitle.find("/")+1:]
 
     if options["Title of the book will be"] == "the file name without extension":
-        bookTitle = bookTitle[:len(bookTitle)-len(openedFileExt)-1]
+        bookTitle = bookTitle[:len(bookTitle)-len(fileExtension)-1]
     elif options["Title of the book will be"] == "a custom title":
         bookTitle = options["Custom Title"]
 
-    if openedFileDir is None or openedFileDir == "":
+    #filePath = askOpenFile("Select *.txt or *.docx file to convert to Book...", defaults=False, suffixes=["txt", "docx"])
+    #
+    #fileName = filePath
+    #
+    #while "/" in fileName:
+    #    fileName = fileName[fileName.find("/")+1:]
+    #
+    #fileExtension = fileName[fileName.find(".")+1:]
+    #
+    #if options["Title of the book will be"] == "the file name without extension":
+    #    bookTitle = fileName
+    #elif options["Title of the book will be"] == "the file name with extension":
+    #    bookTitle = fileName + "." + fileExtension
+    #elif options["Title of the book will be"] == "a custom title":
+    #    bookTitle = options["Use"]
+    #
+
+    if filePath is None or fileName == "":
         raise Exception("Please select a file!")
 
-    totalText = decodeFile(openedFileDir, openedFileExt, options)
+    totalText = decodeFile(filePath, fileExtension, options)
 
     makeBook(level, box, options, totalText, bookTitle)
 
 
 def decodeFile(textFile, textFileExt, options):
-    if textFileExt is None or textFileExt == "":
-        raise Exception("File extension error!")
-
     if textFileExt == "txt":
         return splitText(options, [[[open(textFile).read(), "left"]]])
 
@@ -409,6 +430,20 @@ def makeBook(level, box, options, totalText, bookTitle):
     y = box.miny
     z = box.minz
 
+    bookItem = TAG_Compound()
+    bookItem["id"] = TAG_Short(387)
+    bookItem["Damage"] = TAG_Short(0)
+    bookItem["Count"] = TAG_Byte(1)
+    bookItem["tag"] = TAG_Compound()
+    bookItem["tag"]["title"] = TAG_String(bookTitle)
+    bookItem["tag"]["pages"] = TAG_List()
+
+    if options["the author of the book"] and options["Make"]:
+        bookItem["tag"]["author"] = TAG_String(options["Make"])
+
+    for page in totalText:
+        bookItem["tag"]["pages"].append(TAG_String(page))
+
     if options["Output to"] == "Book Item Entity":
         book = TAG_Compound()
         book["Pos"] = TAG_List()
@@ -416,33 +451,13 @@ def makeBook(level, box, options, totalText, bookTitle):
         book["Pos"].append(TAG_Double(y))
         book["Pos"].append(TAG_Double(z))
         book["id"] = TAG_String("Item")
-        book["Item"] = TAG_Compound()
-        book["Item"]["id"] = TAG_Short(387)
-        book["Item"]["Damage"] = TAG_Short(0)
-        book["Item"]["Count"] = TAG_Byte(1)
-        book["Item"]["tag"] = TAG_Compound()
-        book["Item"]["tag"]["title"] = TAG_String(bookTitle)
-        book["Item"]["tag"]["pages"] = TAG_List()
-
-        if options["the author of the book"] and options["Make"]:
-            book["Item"]["tag"]["author"] = TAG_String(options["Make"])
-
-        for page in totalText:
-            book["Item"]["tag"]["pages"].append(TAG_String(page))
+        book["Item"] = bookItem
 
         chunk = getChunk(x, z)
         chunk.Entities.append(book)
         chunk.dirty = True
 
     elif options["Output to"] == "Book Item in Chest":
-        setBlockAt(x, y, z, 54)
-
-        global GlobalLevel
-        level = GlobalLevel
-        chunk = level.getChunk(x/16, z/16)
-        te = level.tileEntityAt(x, y, z)
-        if te is not None:
-            chunk.TileEntities.remove(te)
 
         chest = TAG_Compound()
         chest["id"] = TAG_String("Chest")
@@ -450,23 +465,17 @@ def makeBook(level, box, options, totalText, bookTitle):
         chest["y"] = TAG_Int(y)
         chest["z"] = TAG_Int(z)
         chest["Items"] = TAG_List()
-        chest["Items"].append(TAG_Compound())
-        chest["Items"][0]["Slot"] = TAG_Byte(13)
-        chest["Items"][0]["id"] = TAG_Short(387)
-        chest["Items"][0]["Damage"] = TAG_Short(0)
-        chest["Items"][0]["Count"] = TAG_Byte(1)
-        chest["Items"][0]["tag"] = TAG_Compound()
-        chest["Items"][0]["tag"]["title"] = TAG_String(bookTitle)
-        chest["Items"][0]["tag"]["pages"] = TAG_List()
+        chest["Items"].append(bookItem)
 
-        if options["the author of the book"] and options["Make"]:
-            chest["Items"][0]["tag"]["author"] = TAG_String(options["Make"])
-
-        for page in totalText:
-            chest["Items"][0]["tag"]["pages"].append(TAG_String(page))
-
+        chunk = getChunk(x, z)
+        te = tileEntityAt(x, y, z)
+        if te is not None:
+            chunk.TileEntities.remove(te)
         chunk.TileEntities.append(chest)
         chunk.dirty = True
+
+        setBlockAt(x, y, z, 54)
+        setDataAt(x, y, z, 0)
 
     elif options["Output to"] == "Give Book Command Block":
         command = "/give @p minecraft:written_book 1 0 {title:\"" + bookTitle + "\",pages:["
@@ -484,15 +493,6 @@ def makeBook(level, box, options, totalText, bookTitle):
 
         command += "}"
 
-        setBlockAt(x, y, z, 137)
-
-        global GlobalLevel
-        level = GlobalLevel
-        chunk = level.getChunk(x/16, z/16)
-        te = level.tileEntityAt(x, y, z)
-        if te is not None:
-            chunk.TileEntities.remove(te)
-
         control = TAG_Compound()
         control["Command"] = TAG_String(command)
         control["id"] = TAG_String(u'Control')
@@ -501,10 +501,16 @@ def makeBook(level, box, options, totalText, bookTitle):
         control["x"] = TAG_Int(x)
         control["y"] = TAG_Int(y)
         control["z"] = TAG_Int(z)
+
+        chunk = getChunk(x, z)
+        te = tileEntityAt(x, y, z)
+        if te is not None:
+            chunk.TileEntities.remove(te)
         chunk.TileEntities.append(control)
         chunk.dirty = True
-        level.setBlockAt(x, y, z, 137)
-        level.setBlockDataAt(x, y, z, 0)
+
+        setBlockAt(x, y, z, 137)
+        setDataAt(x, y, z, 0)
 
 
 def getColor(strColor):
@@ -648,6 +654,7 @@ def getWidth(options, text):
             except:
                 for character in characterWidths:
                     try:
+                        # is it a fullwidth character?
                         if letter == unichr(0xFEE0 + ord(character)):
                             totalWidth += characterWidths[character]
                             break
@@ -671,6 +678,6 @@ def alignText(options, align, text):
 
     spaceCount = min(range(30), key=lambda trySpaceCount: abs(allowedLineWidth-abs(trySpaceCount*factor*4+textWidth)))
 
-    line = " "*(spaceCount+correction) + text
+    line = " " * (spaceCount + correction) + text
 
     return line
