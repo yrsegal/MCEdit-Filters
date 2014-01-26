@@ -46,25 +46,22 @@ from pymclevel import TAG_Int_Array
 from pymclevel import TAG_Float
 from pymclevel import TAG_Long
 
-# waiting for adding a feature to MCEdit
 try:
     import win32ui
 except:
     pass
 
-#from mcplatform import askOpenFile
-#
+from mcplatform import askOpenFile
+
 import zipfile
 from functools import partial
 
 displayName = "Text to Book"
 
 inputs = (
-    # waiting for adding a feature to MCEdit
     ("Convert", ("string", "value=")),
     ("to a book (Leave blank for GUI File selector)", "label"),
     ("", "label"),
-    #
     ("Output to", ("Book Item Entity", "Book Item in Chest", "Give Book Command Block")),
     ("", "label"),
     ("Make", ("string", "value=Notch")),
@@ -266,50 +263,35 @@ def setDataAt(x, y, z, data):
 def perform(level, box, options):
     global GlobalLevel
     GlobalLevel = level
-
-    # waiting for adding a feature to MCEdit
-    if options["Convert"] == "":
+    
+    filePath = options["Convert"]
+    
+    if filePath == "":
         try:
-            openFile = win32ui.CreateFileDialog(1, None, None, 0, "All Files (*.*)|*.*|Text Files (*.txt)|*.txt|Word Files (*.docx)|*.docx|")
-            openFile.DoModal()
-            filePath = openFile.GetPathName()
-            fileExtension = openFile.GetFileExt()
-            bookTitle = openFile.GetFileName()
-
+            filePath = askOpenFile("Select *.txt or *.docx file to convert to Book...", defaults=False, suffixes=["txt", "docx"])
+        
         except:
-            raise Exception("win32ui could not be imported! Please enter the file path manually.")
-
-    else:
-        filePath = options["Convert"]
-        fileExtension = filePath[len(filePath)-4:]
-        if fileExtension[0] == ".":
-            fileExtension = fileExtension[1:]
-
-        bookTitle = filePath
-        while "/" in bookTitle:
-            bookTitle = bookTitle[bookTitle.find("/")+1:]
-
+            try:
+                openFile = win32ui.CreateFileDialog(1, None, None, 0, "All Files (*.*)|*.*|Text Files (*.txt)|*.txt|Word Files (*.docx)|*.docx|")
+                openFile.DoModal()
+                filePath = openFile.GetPathName()
+    
+            except:
+                raise Exception("win32ui could not be imported! Please enter the file path manually.")
+            
+    fileName = filePath
+    
+    while "/" in fileName:
+        fileName = fileName[fileName.find("/")+1:]
+    
+    fileExtension = fileName[fileName.find(".")+1:]
+    
     if options["Title of the book will be"] == "the file name without extension":
-        bookTitle = bookTitle[:len(bookTitle)-len(fileExtension)-1]
+        bookTitle = fileName
+    elif options["Title of the book will be"] == "the file name with extension":
+        bookTitle = fileName + "." + fileExtension
     elif options["Title of the book will be"] == "a custom title":
-        bookTitle = options["Custom Title"]
-
-    #filePath = askOpenFile("Select *.txt or *.docx file to convert to Book...", defaults=False, suffixes=["txt", "docx"])
-    #
-    #fileName = filePath
-    #
-    #while "/" in fileName:
-    #    fileName = fileName[fileName.find("/")+1:]
-    #
-    #fileExtension = fileName[fileName.find(".")+1:]
-    #
-    #if options["Title of the book will be"] == "the file name without extension":
-    #    bookTitle = fileName
-    #elif options["Title of the book will be"] == "the file name with extension":
-    #    bookTitle = fileName + "." + fileExtension
-    #elif options["Title of the book will be"] == "a custom title":
-    #    bookTitle = options["Use"]
-    #
+        bookTitle = options["Use"]
 
     if filePath is None or fileName == "":
         raise Exception("Please select a file!")
