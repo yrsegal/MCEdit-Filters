@@ -12,7 +12,7 @@ from pymclevel import TAG_Long
 displayName = 'Change Horses In MCEdit'
 inputs = [
 	(	
-		("Horse Type To Change", ("Normal Horse","Donkey Horse", "Mule Horse", "Zombie Horse", "Skeleton Horse")),
+		("Horse Type To Change To", ("Normal Horse","Donkey Horse", "Mule Horse", "Zombie Horse", "Skeleton Horse")),
 		("Changing Horses won't apply Saddles, Horse Armor, or Donkey Chests.", "label"),
 		("You may not be able to apply these after changement, so tame and apply first.", "label"),
 		("Main", "title"),
@@ -34,7 +34,7 @@ inputs = [
 	
 def perform(level, box, options):
     
-    horsetype = options["Horse Type To Change"]
+    horsetype = options["Horse Type To Change To"]
 bred = options["Bred: "]
 chested = options["Chested: "]
 repro = options["Reproduced: "]
