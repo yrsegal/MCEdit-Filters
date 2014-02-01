@@ -34,6 +34,8 @@ inputs = [
 ]
 	
 def perform(level, box, options):
+    global GlobalLevel
+    GlobalLevel = level
     
     horsetype = options["Horse Type To Change To"]
     bred = options["Bred: "]
