@@ -1,5 +1,5 @@
 ## speechBubbles Filter
-#### by CrushedPixel, modified by destruc7i0n and jgierer12
+#### by jgierer12, idea by SimplySarc
 
 *This is a Filter for [MCEdit](http://www.mcedit.net)*
 
