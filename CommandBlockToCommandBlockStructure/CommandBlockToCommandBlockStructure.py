@@ -104,12 +104,12 @@ def perform(level, box, options):
 
 	else:
 		if cmdBlocks:
-			createCmdBlock(level, box, options, cmdBlocks)
+			createCmdBlocks(level, box, options, cmdBlocks)
 
 		else:
 			raise Exception("Please select an area with cmd blocks first!")
 
-def createCmdBlock(level, box, options, cmdBlocks):
+def createCmdBlocks(level, box, options, cmdBlocks):
 	x = box.minx
 	y = box.miny
 	z = box.minz
@@ -135,9 +135,10 @@ def createCmdBlock(level, box, options, cmdBlocks):
 			raise Exception("Your selection is too small!")
 
 def getCmdBlocks(level, box, options):
-	cmdBlocks = []
-	
+	cmdblocks = []
+
 	for (chunk, slices, point) in level.getChunkSlices(box):
+		
 		for t in chunk.TileEntities:
 			x = t["x"].value
 			y = t["y"].value
@@ -146,8 +147,7 @@ def getCmdBlocks(level, box, options):
 			if x >= box.minx and x < box.maxx and y >= box.miny and y < box.maxy and z >= box.minz and z < box.maxz:
 				if t["id"].value == "Control":
 					command = t["Command"].value
-						chunk.dirty = True
-				
+
 	return cmdBlocks
 	
 def cmdBlock((x, y, z), command):
