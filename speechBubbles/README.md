@@ -21,6 +21,8 @@ Included characters:
   * `?`
   * `_`
 
+If a character is unknown, it will be replaced with a `_`.
+
 If you want me to include a character that is not yet included, refer to the [contribute section](#contribute).
 
 #### Emoticons
