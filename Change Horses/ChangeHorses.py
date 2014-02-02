@@ -26,8 +26,8 @@ inputs = [
 		("Tamed: ", False),
 		("Use A Temper Value", False),
 		("Temper Value: ", (0, 0, 100)),
-		("Use Owner Name? ", False),
-		("Owner Name: ", "string"),
+		#("Use Owner Name? ", False),
+		#("Owner Name: ", "string"),
 		("Saddle: ", False),
 		("Extra Options", "title"),
 	),
@@ -85,9 +85,9 @@ def perform(level, box, options):
     	if e["id"].value == "EntityHorse" and tempervalueTF == True:
     		e["Temper"] = TAG_String(tempervalue)
     		chunk.dirty = True
-    	if e["id"].value == "EntityHorse" and ownernameTF == True:
-    		e["OwnerName"] = TAG_String(ownername)
-    		chunk.dirty = True
+    	#if e["id"].value == "EntityHorse" and ownernameTF == True:
+    		#e["OwnerName"] = TAG_String(ownername)
+    		#chunk.dirty = True
     	if e["id"].value == "EntityHorse" and saddle == True:
     		e["Saddle"] = TAG_Byte(1)
     		chunk.dirty = True
