@@ -40,7 +40,6 @@ inputs = [
 		("Extra", "title"),
 		
 		("(Still A Work In Progress Page!)", "label"),
-		("Delete Command Blocks" , False),
 	),
 ]
 
@@ -111,11 +110,6 @@ def perform(level, box, options):
 		if command == []:
 			command = None;
 			raise Exception("Please select an area with command blocks!")
-				
-				if options["Delete Command Blocks"] == True and level.BlockAt(x, y, z) == 137 and command != []
-					level.setBlockAt(x, y, z, 0)
-				else:
-					continue
 
 	else:
 		if command:
@@ -124,7 +118,7 @@ def perform(level, box, options):
 		else:
 			raise Exception("Please select an area with cmd blocks first!")
 
-def createCmdBlocks(level, box, options, commandBlocks, command):
+def createCmdBlocks(level, box, options, command):
 	x = box.minx
 	y = box.miny
 	z = box.minz
@@ -162,7 +156,6 @@ def getCommandBlocks(level, box, options):
 			if x >= box.minx and x < box.maxx and y >= box.miny and y < box.maxy and z >= box.minz and z < box.maxz:
 				if t["id"].value == "Control":
 					command = t["Command"].value
-				command.append((x, y, z, t))
 
 	return command
 	
