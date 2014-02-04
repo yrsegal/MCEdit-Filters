@@ -27,13 +27,20 @@ inputs = [
 
 		("Step I; Select: Select a region with command blocks", "label"),
 		("Step II; Generate: Select the region where the Command Blocks are generated", "label"),
-                ("(Go to the 'General' Tab to select the step; Select or Generate)", "label"),
+		("(Go to the 'General' Tab to select the step; Select or Generate)", "label"),
 	),
 
 	(
 		("General", "title"),
 
 		("Step: ", ("Select", "Generate")),
+	),
+	
+	(
+		("Extra", "title"),
+		
+		("(Still A Work In Progress Page!)", "label"),
+		("Delete Command Blocks" , False),
 	),
 ]
 
@@ -104,6 +111,11 @@ def perform(level, box, options):
 		if command == []:
 			command = None;
 			raise Exception("Please select an area with command blocks!")
+				
+				if options["Delete Command Blocks"] == True and level.BlockAt(x, y, z) == 137 and command != []
+					level.setBlockAt(x, y, z, 0)
+				else:
+					continue
 
 	else:
 		if command:
