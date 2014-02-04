@@ -27,6 +27,7 @@ inputs = [
 
 		("Step I; Select: Select a region with command blocks", "label"),
 		("Step II; Generate: Select the region where the Command Blocks are generated", "label"),
+                ("(Go to the "General" Tab to select the step; Select or Generate)", "label"),
 	),
 
 	(
