@@ -1,5 +1,7 @@
-#### Entities to Command Blocks ####
-# Filter for MCEdit by jgierer12, suggested by BilboLovesRedstone
+#### Command Block To Command Block Structure ####
+# Filter for MCEdit by destruc7i0n 
+# Puts all the command blocks in the region into a structure that can activate them 
+# heavily based off of jgierer12's Entities to Command Block Filter (http://is.gd/ETCMDB)
 
 
 from pymclevel import TAG_List
@@ -23,14 +25,14 @@ inputs = [
 	(
 		("Instructions", "title"),
 
-		("Step I: Select a region with command blocks", "label"),
-		("Step II: Select the region where the Command Blocks are generated", "label"),
+		("Step I; Select: Select a region with command blocks", "label"),
+		("Step II; Generate: Select the region where the Command Blocks are generated", "label"),
 	),
 
 	(
 		("General", "title"),
 
-		("Step: ", ("I", "II")),
+		("Step: ", ("Select", "Generate")),
 	),
 ]
 
@@ -95,7 +97,7 @@ def perform(level, box, options):
 
 	global command
 
-	if options["Step: "] == "I":
+	if options["Step: "] == "Select":
 		command = getCommandBlocks(level, box, options)
 
 		if command == []:
