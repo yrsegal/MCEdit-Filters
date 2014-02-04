@@ -93,18 +93,18 @@ def perform(level, box, options):
 	global GlobalLevel
 	GlobalLevel = level
 
-	global commandBlocks
+	global command
 
 	if options["Step: "] == "I":
-		commandBlocks = getCommandBlocks(level, box, options)
+		command = getCommandBlocks(level, box, options)
 
-		if commandBlocks == []:
-			commandBlocks = None;
+		if command == []:
+			command = None;
 			raise Exception("Please select an area with command blocks!")
 
 	else:
-		if commandBlocks:
-			createCmdBlocks(level, box, options, commandBlocks, command)
+		if command:
+			createCmdBlocks(level, box, options, command)
 
 		else:
 			raise Exception("Please select an area with cmd blocks first!")
@@ -114,7 +114,7 @@ def createCmdBlocks(level, box, options, commandBlocks, command):
 	y = box.miny
 	z = box.minz
 
-	for (eposX, eposY, eposZ, entity) in commandBlocks:
+	for (eposX, eposY, eposZ) in command:
 
 		level.setBlockAt(x, y, z, 137) # Command Block
 		cmd = cmdBlock((x, y, z), command[:len(command)-1])
@@ -135,7 +135,7 @@ def createCmdBlocks(level, box, options, commandBlocks, command):
 			raise Exception("Your selection is too small!")
 
 def getCommandBlocks(level, box, options):
-	commandBlocks = []
+	command = []
 
 	for (chunk, slices, point) in level.getChunkSlices(box):
 		
@@ -147,9 +147,9 @@ def getCommandBlocks(level, box, options):
 			if x >= box.minx and x < box.maxx and y >= box.miny and y < box.maxy and z >= box.minz and z < box.maxz:
 				if t["id"].value == "Control":
 					command = t["Command"].value
-				commandBlocks.append((x, y, z, t))
+				command.append((x, y, z, t))
 
-	return commandBlocks
+	return command
 	
 def cmdBlock((x, y, z), command):
 	control = TAG_Compound()
