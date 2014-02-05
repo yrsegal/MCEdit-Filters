@@ -105,7 +105,8 @@ def perform(level, box, options):
 	global commandBlocks
 
 	if options["Step: "] == "Select":
-		command = command, commandBlocks = getCommandBlocks(level, box, options)
+		command = ""
+		command, commandBlocks = getCommandBlocks(level, box, options)
 
 		if commandBlocks == []:
 			commandBlocks = None;
