@@ -105,8 +105,7 @@ def perform(level, box, options):
 	global commandBlocks
 
 	if options["Step: "] == "Select":
-		command = ""
-		command, commandBlocks = getCommandBlocks(level, box, options)
+		commandBlocks = getCommandBlocks(level, box, options)
 
 		if commandBlocks == []:
 			commandBlocks = None;
@@ -175,7 +174,7 @@ def getCommandBlocks(level, box, options):
 					if options["Print Commands After Selection"] == True:
 						print("Command At: " +str(x)+"(x)"+" "+str(y)+"(y)"+" "+str(z)+ "(z)" + " " +"is: " + command + "													")
 
-	return(command, commandBlocks)
+	return commandBlocks
 	
 def cmdBlock(x, y, z, command):
 	control = TAG_Compound()
