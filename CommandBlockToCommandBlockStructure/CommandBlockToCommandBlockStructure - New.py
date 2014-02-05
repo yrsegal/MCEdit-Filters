@@ -1,8 +1,7 @@
 #### Command Block To Command Block Structure ####
 # Filter for MCEdit by destruc7i0n 
 # Puts all the command blocks in the region into a structure that can activate them 
-# heavily based off of jgierer12's Entities to Command Block Filter (http://is.gd/ETCMDB)
-
+# heavily based off of jgierer12's Create Wireless Screen Filter (http://is.gd/CWSJG12)
 
 from pymclevel import TAG_List
 from pymclevel import TAG_Byte
@@ -106,7 +105,7 @@ def perform(level, box, options):
 	global commandBlocks
 
 	if options["Step: "] == "Select":
-		commandBlocks = getCommandBlocks(level, box, options)
+		command = command, commandBlocks = getCommandBlocks(level, box, options)
 
 		if commandBlocks == []:
 			commandBlocks = None;
@@ -119,11 +118,11 @@ def perform(level, box, options):
 			elif box.maxz-box.minz < 5:
 				raise Exception("The selection must be at least 5 blocks wide (z dimension)")
 
-			createCmdBlocks(level, box, options, commandBlocks)
+			createCmdBlocks(level, box, options, commandBlocks, command)
 		else:
 			raise Exception("Please select an area with cmd blocks first!")
 
-def createCmdBlocks(level, box, options, commandBlocks):
+def createCmdBlocks(level, box, options, commandBlocks, command):
 
 	i = 0
 
@@ -180,7 +179,7 @@ def getCommandBlocks(level, box, options):
 def cmdBlock(x, y, z, command):
 	control = TAG_Compound()
 	control["id"] = TAG_String("Control")
-	control["Command"] = TAG_String(command)
+	control["Command"] = TAG_String(command["Command"].value)
 	control["x"] = TAG_Int(x)
 	control["y"] = TAG_Int(y)
 	control["z"] = TAG_Int(z)
